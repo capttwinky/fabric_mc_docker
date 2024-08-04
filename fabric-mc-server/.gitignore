@@ -1,2 +1,4 @@
 mods/*.jar
+data/*
 .*
+!*readme.md

@@ -1,40 +1,16 @@
-version: '3.8'
-
 services:
-  mc-server:
-    image: fabric-mc-server
-    container_name: fabric-mc-server
+  minecraft-server:
+    image: itzg/minecraft-server
+    container_name: mc-fabric-server
     ports:
       - "25565:25565"
+    env_file:
+      - config/mc_server_version.env
+    environment:
+      EULA: "TRUE"
+      TYPE: "FABRIC"
     volumes:
-      - ./config:/app/config
-      - ./mods:/app/mods
-      - mc-data:/app
-    working_dir: /app
-    command: sh -c "ls -l /app && java -Xmx2G -jar /app/fabric-server-launch.jar nogui"
-
-  prometheus:
-    image: prom/prometheus
-    container_name: prometheus
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-
-  grafana:
-    image: grafana/grafana
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    volumes:
-      - grafana-data:/var/lib/grafana
-
-  node_exporter:
-    image: prom/node-exporter
-    container_name: node_exporter
-    network_mode: "host"
-
-volumes:
-  mc-data:
-  grafana-data:
-
+      - ./data:/data
+      - ./mods:/data/mods
+      - ./config:/data/config
+    restart: unless-stopped
